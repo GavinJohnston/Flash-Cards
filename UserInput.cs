@@ -39,7 +39,7 @@ public class userInput {
 
         string stackName = Console.ReadLine();
 
-        AccessDB.createStack(stackName);
+        Controller.createStack(stackName);
 
         Console.WriteLine("\nStack Created. Press ENTER to manage your stack\n");
 

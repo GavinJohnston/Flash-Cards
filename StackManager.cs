@@ -6,11 +6,11 @@ public class StackManager {
 
         Console.WriteLine("Stack Populate\n");
 
-        var returnStack = AccessDB.returnStack();
+        var returnStack = Controller.returnStack();
 
         Console.WriteLine("\nEnter the name of a stack below..\n");
 
-        foreach (AccessDB.Records item in returnStack)
+        foreach (Controller.Records item in returnStack)
         {
             Console.WriteLine($"Stack Name: {item.Name}");
         }
@@ -21,7 +21,26 @@ public class StackManager {
 
         var findId = returnStack.Find(item => item.Name == (stackChoice));
 
-        Console.ReadLine();
+        int foundID = findId.Id;
+
+        bool closeApp = false;
+        while(closeApp == false) {
+            Console.Clear();
+            Console.WriteLine($"Add to Stack: {stackChoice}");
+
+            Console.WriteLine("\nPress 1 to add a card. Press 0 to quit\n");
+
+            string questionApp = Console.ReadLine();
+
+            switch(questionApp) {
+                case "0":
+                closeApp = true;
+                break;
+                case "1":
+                    cardGenerator(stackChoice, foundID);
+                break;
+            }
+        }
     }
 
         public static void Delete() {
@@ -31,10 +50,20 @@ public class StackManager {
         public static void Rename() {
 
     }
-}
 
-    public class Records { 
+    public static void cardGenerator(string stackChoice, int foundID) {
+        Console.WriteLine($"\nAdd to Stack: {stackChoice}");
 
-        public int Id {get; set;}
-        public string Name {get; set;}
+        Console.WriteLine("Add a Question to your Card:\n");
+
+        string cardQuestion = Console.ReadLine();
+
+        Console.WriteLine("Add an Answer to your Card:\n");
+
+        string cardAnswer = Console.ReadLine();
+
+        Controller.addCards(cardQuestion, cardAnswer, foundID);
+
+        Console.WriteLine("Card Created. Press Any key to return.");
     }
+}

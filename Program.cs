@@ -23,7 +23,7 @@ namespace flashcards
 
                 connection.Close();
 
-                AccessDB.GenerateTables();
+                Controller.GenerateTables();
             }      
 
             userInput.mainMenu();      

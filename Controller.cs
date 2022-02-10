@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using ConsoleTableExt;
 
-public class AccessDB {
+public class Controller {
 
     static string connectionString = @"Server=localhost,1433; Database=flashcards; User=sa; Password=someThingComplicated1234";
     public static void GenerateTables() {
@@ -16,7 +16,7 @@ public class AccessDB {
             IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'stacks')
             CREATE TABLE stacks (id INTEGER PRIMARY KEY IDENTITY, name TEXT);
             IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'cards')
-            CREATE TABLE cards (id INTEGER PRIMARY KEY IDENTITY, question TEXT, answer TEXT);
+            CREATE TABLE cards (id INTEGER PRIMARY KEY IDENTITY, question TEXT, answer TEXT, stackID INT, FOREIGN KEY (stackID) REFERENCES stacks(id));
             ";
 
             createTables.ExecuteNonQuery();
@@ -34,8 +34,6 @@ public class AccessDB {
             sendStack.CommandText = $"INSERT INTO stacks(name) VALUES('{stackName}')";
 
             sendStack.ExecuteNonQuery();
-
-            connection.Close();
         }
     }
 
@@ -75,8 +73,16 @@ public class AccessDB {
         public string Name {get; set;}
     }
 
-    public static void addCards() {
+    public static void addCards(string question, string answer, int foundID) {
+        using(var connection = new SqlConnection(connectionString)) {
+            connection.Open();
+        
+            var addData = connection.CreateCommand();
 
+            addData.CommandText = $"INSERT INTO cards (question, answer, stackID) VALUES ('{question}', '{answer}', '{foundID}')";
+
+            addData.ExecuteNonQuery();
+        }
     }
 
 
