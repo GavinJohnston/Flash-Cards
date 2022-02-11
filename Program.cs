@@ -25,7 +25,6 @@ namespace flashcards
 
                 Controller.GenerateTables();
             }      
-
             userInput.mainMenu();      
         }
     }

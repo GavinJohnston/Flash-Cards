@@ -43,12 +43,62 @@ public class StackManager {
         }
     }
 
-        public static void Delete() {
+    public static void Delete() {
+        Console.Clear();
 
+        Console.WriteLine("Stack Delete\n");
+
+        Console.WriteLine("Enter the name of a stack from the list below to delete..\n");
+
+        var returnStack = Controller.returnStack();
+
+        foreach (Controller.Records item in returnStack)
+        {
+            Console.WriteLine($"Stack Name: {item.Name}");
+        }
+
+        Console.WriteLine("\n");
+
+       string deletionChoice = Console.ReadLine();
+
+        var findId = returnStack.Find(item => item.Name == (deletionChoice));
+
+        int foundID = findId.Id;
+
+        Controller.deleteStack(foundID);
     }
 
-        public static void Rename() {
+    public static void Rename() {
+        Console.Clear();
 
+        Console.WriteLine("Stack Delete\n");
+
+        Console.WriteLine("Enter the name of a stack from the list below to Rename..\n");
+
+        var returnStack = Controller.returnStack();
+
+        foreach (Controller.Records item in returnStack)
+        {
+            Console.WriteLine($"Stack Name: {item.Name}");
+        }
+
+        Console.WriteLine("\n");
+
+        string renameChoice = Console.ReadLine();
+
+        var findId = returnStack.Find(item => item.Name == (renameChoice));
+
+        int foundID = findId.Id;
+
+        Console.WriteLine("\nEnter New Name...\n");
+
+        string newName = Console.ReadLine();
+
+       Controller.renameStack(foundID, newName);
+
+       Console.WriteLine("\nStack Renamed. Press any key to RETURN to Main Menu");
+
+       Console.ReadLine();
     }
 
     public static void cardGenerator(string stackChoice, int foundID) {

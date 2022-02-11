@@ -16,7 +16,7 @@ public class Controller {
             IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'stacks')
             CREATE TABLE stacks (id INTEGER PRIMARY KEY IDENTITY, name TEXT);
             IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'cards')
-            CREATE TABLE cards (id INTEGER PRIMARY KEY IDENTITY, question TEXT, answer TEXT, stackID INT, FOREIGN KEY (stackID) REFERENCES stacks(id));
+            CREATE TABLE cards (id INTEGER PRIMARY KEY IDENTITY, question TEXT, answer TEXT, stackID INT, FOREIGN KEY (stackID) REFERENCES stacks(id) ON DELETE CASCADE);
             ";
 
             createTables.ExecuteNonQuery();
@@ -85,17 +85,29 @@ public class Controller {
         }
     }
 
+    public static void deleteStack(int foundID) {
+        using(var connection = new SqlConnection(connectionString)) {
+            connection.Open();
+        
+            var deleteData = connection.CreateCommand();
 
+            deleteData.CommandText = $"DELETE FROM stacks WHERE id={foundID}";
 
+            deleteData.ExecuteNonQuery();
+        }
+    }
+
+    public static void renameStack(int foundID, string newname) {
+        using(var connection = new SqlConnection(connectionString)) {
+            connection.Open();
+        
+            var renameStack = connection.CreateCommand();
+
+            renameStack.CommandText = $"UPDATE stacks SET name = '{newname}' WHERE id = {foundID}";
+
+            renameStack.ExecuteNonQuery();
+        }
+    }
 }
 
-
-
-
-           // ConsoleTableBuilder
-            // .From(tableData)
-            // .WithFormat(ConsoleTableBuilderFormat.Alternative)
-            // .WithColumn("Stack List")
-            // .ExportAndWrite();
-
-            // Console.WriteLine("\n");
+    
