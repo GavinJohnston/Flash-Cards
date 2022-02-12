@@ -17,6 +17,8 @@ public class Controller {
             CREATE TABLE stacks (id INTEGER PRIMARY KEY IDENTITY, name TEXT);
             IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'cards')
             CREATE TABLE cards (id INTEGER PRIMARY KEY IDENTITY, question TEXT, answer TEXT, stackID INT, FOREIGN KEY (stackID) REFERENCES stacks(id) ON DELETE CASCADE);
+            IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'study')
+            CREATE TABLE study (id INTEGER PRIMARY KEY IDENTITY, stackID INT, score DECIMAL(4,2), date TEXT);
             ";
 
             createTables.ExecuteNonQuery();
@@ -46,13 +48,13 @@ public class Controller {
 
             getData.CommandText = $"SELECT * FROM stacks";
 
-            List<Records> tableData = new();
+            List<Records> stackData = new();
 
             SqlDataReader reader = getData.ExecuteReader();
 
             if (reader.HasRows) {
                 while (reader.Read()) {
-                    tableData.Add(
+                    stackData.Add(
                         new Records {
                             Id = reader.GetInt32(0),
                             Name = reader.GetString(1)
@@ -64,13 +66,65 @@ public class Controller {
 
             connection.Close();
 
-            return tableData;
+            return stackData;
         } 
+    }
+
+    public static List<Cards> returnCards() {
+        using(var connection = new SqlConnection(connectionString)) {
+            connection.Open();
+
+            var getData = connection.CreateCommand();
+
+            getData.CommandText = $"SELECT * FROM cards";
+
+            List<Cards> cardData = new();
+
+            SqlDataReader reader = getData.ExecuteReader();
+
+            if(reader.HasRows) {
+                while (reader.Read()) {
+                    cardData.Add(
+                        new Cards {
+                            Id = reader.GetInt32(0),
+                            Question = reader.GetString(1),
+                            Answer = reader.GetString(2),
+                            StackId = reader.GetInt32(3)
+                        }); 
+                }
+            } else {
+                Console.WriteLine("No Cards Exist");
+            }
+
+            connection.Close();
+
+            return cardData;
+        }
+    }
+
+    public static void saveSession(int foundID, decimal Score, string Date) {
+        using(var connection = new SqlConnection(connectionString)) {
+            connection.Open();
+
+            var sendScore = connection.CreateCommand();
+
+            sendScore.CommandText = $"INSERT INTO study (stackID, score, date) VALUES('{foundID}', '{Score}', '{Date}')";
+
+            sendScore.ExecuteNonQuery();
+        }
     }
 
     public class Records { 
         public int Id {get; set;}
         public string Name {get; set;}
+    }
+
+    public class Cards {
+
+        public int Id {get; set;}
+        public string Question {get; set;}
+        public string Answer {get; set;}
+        public int StackId {get; set;}        
     }
 
     public static void addCards(string question, string answer, int foundID) {

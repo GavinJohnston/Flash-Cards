@@ -57,6 +57,8 @@ public class userInput {
 
         Console.WriteLine("\nPress 3 to rename a Stack");
 
+        Console.WriteLine("\nPress 4 to Study a Stack");
+
         Console.WriteLine("\nPress 0 to return to Main Menu\n");
 
         string manageOption = Console.ReadLine();
@@ -73,6 +75,9 @@ public class userInput {
             break;
             case "3":
                 StackManager.Rename();
+            break;  
+            case "4":
+                studySession.Study();
             break;   
         }
     }
