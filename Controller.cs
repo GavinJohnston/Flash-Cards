@@ -70,6 +70,23 @@ public class Controller {
         } 
     }
 
+    public static List<Records> ReindexedStack() {
+
+        List<Records> stackData = returnStack();
+
+        List<Records> ReindexedStack = new();
+
+        for(int i = 0; i < stackData.Count; i++) {
+                ReindexedStack.Add(
+                    new Records {
+                        Id = i + 1,
+                        Name = stackData[i].Name
+                    });
+        }
+
+        return ReindexedStack;
+    }
+
     public static List<Cards> returnCards() {
         using(var connection = new SqlConnection(connectionString)) {
             connection.Open();
@@ -114,19 +131,6 @@ public class Controller {
         }
     }
 
-    public class Records { 
-        public int Id {get; set;}
-        public string Name {get; set;}
-    }
-
-    public class Cards {
-
-        public int Id {get; set;}
-        public string Question {get; set;}
-        public string Answer {get; set;}
-        public int StackId {get; set;}        
-    }
-
     public static void addCards(string question, string answer, int foundID) {
         using(var connection = new SqlConnection(connectionString)) {
             connection.Open();
@@ -139,13 +143,19 @@ public class Controller {
         }
     }
 
-    public static void deleteStack(int foundID) {
+    public static void deleteStack(string deletionChoice) {
         using(var connection = new SqlConnection(connectionString)) {
             connection.Open();
         
             var deleteData = connection.CreateCommand();
 
-            deleteData.CommandText = $"DELETE FROM stacks WHERE id={foundID}";
+            List<Records> stackData = returnStack();
+
+            var findItem = stackData.Find(item => item.Name == (deletionChoice));
+
+            int itemId = findItem.Id;
+
+            deleteData.CommandText = $"DELETE FROM stacks WHERE ID='{itemId}'";
 
             deleteData.ExecuteNonQuery();
         }
@@ -161,6 +171,20 @@ public class Controller {
 
             renameStack.ExecuteNonQuery();
         }
+    }
+
+    // OBJECTS
+
+    public class Records { 
+        public int Id {get; set;}
+        public string Name {get; set;}
+    }
+
+    public class Cards {
+        public int Id {get; set;}
+        public string Question {get; set;}
+        public string Answer {get; set;}
+        public int StackId {get; set;}        
     }
 }
 

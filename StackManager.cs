@@ -48,24 +48,24 @@ public class StackManager {
 
         Console.WriteLine("Stack Delete\n");
 
-        Console.WriteLine("Enter the name of a stack from the list below to delete..\n");
+        Console.WriteLine("Enter the ID of a stack from the list below to delete..\n");
 
-        var returnStack = Controller.returnStack();
+        var returnStack = Controller.ReindexedStack();
 
         foreach (Controller.Records item in returnStack)
         {
-            Console.WriteLine($"Stack Name: {item.Name}");
+            Console.WriteLine($"{item.Id}: {item.Name}");
         }
 
         Console.WriteLine("\n");
 
-       string deletionChoice = Console.ReadLine();
+        int deletionChoice = Convert.ToInt32(Console.ReadLine());
 
-        var findId = returnStack.Find(item => item.Name == (deletionChoice));
+        var findName = returnStack.Find(item => item.Id == (deletionChoice));
 
-        int foundID = findId.Id;
+        string foundName = findName.Name;
 
-        Controller.deleteStack(foundID);
+        Controller.deleteStack(foundName);
     }
 
     public static void Rename() {
