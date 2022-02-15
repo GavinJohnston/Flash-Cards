@@ -59,6 +59,8 @@ public class userInput {
 
         Console.WriteLine("\nPress 4 to Study a Stack");
 
+        Console.WriteLine("\nPress 5 to View Progress");
+
         Console.WriteLine("\nPress 0 to return to Main Menu\n");
 
         string manageOption = Console.ReadLine();
@@ -78,7 +80,10 @@ public class userInput {
             break;  
             case "4":
                 studySession.Study();
-            break;   
+            break;
+            case "5":
+                studySession.Results();
+            break;     
         }
     }
 }

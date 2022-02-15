@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using ConsoleTableExt;
+using System.Linq;
 
 public class Controller {
 
@@ -131,6 +132,34 @@ public class Controller {
         }
     }
 
+    public static List<StudyData> retrieveProgress() {
+        using(var connection = new SqlConnection(connectionString)) {
+            connection.Open();
+
+            var getProgress = connection.CreateCommand();
+
+            getProgress.CommandText = $"SELECT * FROM study";
+
+            List<StudyData> progData = new();
+
+            SqlDataReader reader = getProgress.ExecuteReader();
+
+            if (reader.HasRows) {
+                while (reader.Read()) {
+                    progData.Add(
+                        new StudyData {
+                            Score = reader.GetDecimal(2),
+                            Month = returnMonth(reader.GetString(3).Substring(5, 2))
+                        }); 
+                }
+            } else {
+                Console.WriteLine("No Study Record Exist");
+            }
+
+            return progData;
+        }
+    }
+
     public static void addCards(string question, string answer, int foundID) {
         using(var connection = new SqlConnection(connectionString)) {
             connection.Open();
@@ -174,6 +203,58 @@ public class Controller {
     }
 
     // OBJECTS
+
+    public static string returnMonth(string input) {
+
+        switch (input)
+        {
+            case "01":
+                return "January";
+            break;
+            case "02":
+                return "February";
+            break;
+            case "03":
+                return "March";
+            break;
+            case "04":
+                return "April";
+            break;
+            case "05":
+                return "May";
+            break;
+            case "06":
+                return "June";
+            break;
+            case "07":
+                return "July";
+            break;
+            case "08":
+                return "August";
+            break;
+            case "09":
+                return "September";
+            break;
+            case "10":
+                return "October";
+            break;
+            case "11":
+                return "November";
+            break;
+            case "12":
+                return "December";
+            break;
+            default:
+                return "fail";
+            break;
+        }
+
+    }
+
+    public class StudyData { 
+        public decimal Score {get; set;}
+        public string Month {get; set;}
+    }
 
     public class Records { 
         public int Id {get; set;}
