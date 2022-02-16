@@ -59,11 +59,11 @@ public class studySession {
         decimal Score = Counter / Amount;
 
         var dateAndTime = DateTime.Now;
-        var dateNow = dateAndTime.Date.ToString("yyyy-MM-dd");
+        var dateNow = dateAndTime.Date;
 
-        Console.WriteLine($"Study Complete! On {dateNow} you scored {Counter} out of {Amount}.\n");
+        Console.WriteLine($"Study Complete! On {dateNow.ToString("dd-MM-yyyy")} you scored {Counter} out of {Amount}.\n");
 
-        Controller.saveSession(foundID, Score, dateNow);
+        Controller.saveSession(foundID, Score);
 
         Console.WriteLine($"Press any key to return to Main Menu\n");
 
@@ -75,37 +75,7 @@ public class studySession {
 
         Console.WriteLine("Study Results\n");
 
-        var studyProgress = Controller.retrieveProgress();
-
-        var values = new[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-
-        var monthCount = values.Select(v => new {Month = v,
-            Count = studyProgress.Count(item => item.Month == v)
-            });
-
-        foreach (var x in monthCount)
-        {
-            decimal Score = 0.0M;
-            decimal Counter = 0.0M;
-            foreach (Controller.StudyData item in studyProgress)
-            {
-                if(x.Month == item.Month) {
-                    Score = Score + item.Score;
-                    Counter = Counter + 1;
-                }
-            }
-
-            float ScoreFloat = Convert.ToSingle(Score);
-            float CounterFloat = Convert.ToSingle(Counter);
-
-            float totalScore = ScoreFloat / CounterFloat * 100;
-
-            if(x.Count > 0) {
-                Console.WriteLine($"You studied {x.Count} time(s) in {x.Month}, with an average score of {totalScore}%");
-            }
-        }
-
-        Console.WriteLine("\nPress any key to return to main menu");
+        
 
         Console.ReadLine();
     }
