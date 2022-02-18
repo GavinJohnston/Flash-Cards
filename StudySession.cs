@@ -31,43 +31,63 @@ public class studySession {
 
         var returnCards = Controller.returnCards();
 
-        List<Controller.Cards> Cards = new();
+        if(returnCards != null) {
 
-        foreach (Controller.Cards item in returnCards)
-        {
-            if(item.StackId == foundID) {
-                Cards.Add(item);
+            List<Controller.Cards> Cards = new();
+
+                foreach (Controller.Cards item in returnCards)
+                {
+                    if(item.StackId == foundID) {
+                        Cards.Add(item);
+                    }
+                }
+
+            if(Cards.Count != 0) {
+
+            // QUESTION AND ANSWER
+
+                decimal Counter = 0;
+                decimal Amount = Cards.Count;
+
+                foreach (Controller.Cards item in Cards)
+                {
+                    Console.WriteLine($"Question: {item.Question}\n");
+
+                    string Answer = Console.ReadLine();
+
+                    if(Answer == item.Answer) {
+                        Counter++;
+                    }
+                }
+
+                decimal Score = Counter / Amount;
+
+                var dateAndTime = DateTime.Now;
+                var dateNow = dateAndTime.Date;
+
+                Console.WriteLine($"Study Complete! On {dateNow.ToString("dd-MM-yyyy")} you scored {Counter} out of {Amount}.\n");
+
+                Controller.saveSession(foundID, Score);
+
+                Console.WriteLine($"Press any key to return to Main Menu\n");
+
+                Console.ReadLine();
+
+            } else {
+            Console.WriteLine("\nThis stack holds no cards, Press ENTER to populate the stack.\n");
+
+            Console.ReadLine();
+
+            StackManager.Populate();
             }
+
+        } else {
+            Console.WriteLine("\nNo stacks hold any cards, Press ENTER to populate a stack.\n");
+
+            Console.ReadLine();
+
+            StackManager.Populate();
         }
-
-       // QUESTION AND ANSWER
-
-       decimal Counter = 0;
-       decimal Amount = Cards.Count;
-
-        foreach (Controller.Cards item in Cards)
-        {
-            Console.WriteLine($"Question: {item.Question}\n");
-
-            string Answer = Console.ReadLine();
-
-            if(Answer == item.Answer) {
-                Counter++;
-            }
-        }
-
-        decimal Score = Counter / Amount;
-
-        var dateAndTime = DateTime.Now;
-        var dateNow = dateAndTime.Date;
-
-        Console.WriteLine($"Study Complete! On {dateNow.ToString("dd-MM-yyyy")} you scored {Counter} out of {Amount}.\n");
-
-        Controller.saveSession(foundID, Score);
-
-        Console.WriteLine($"Press any key to return to Main Menu\n");
-
-        Console.ReadLine();
     }
 
     public static void Results() {

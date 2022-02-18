@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 public class userInput {
 
@@ -19,6 +20,7 @@ public class userInput {
                     Console.Clear();  
                     Console.WriteLine("Goodbye..");
                     closeApp = true;
+                    System.Environment.Exit(1);
                 break;
                 case "1":
                     GenerateStacks();
@@ -39,11 +41,26 @@ public class userInput {
 
         string stackName = Console.ReadLine();
 
+        List<Controller.Records> stack = Controller.returnStack();
+
+        if(stack != null) {
+
+            foreach (Controller.Records item in stack)
+            {
+                if(item.Name == stackName) {
+
+                    Console.WriteLine("\nStack name taken, please choose another\n");
+
+                    stackName = Console.ReadLine();
+                }
+            }
+        }
+
         Controller.createStack(stackName);
 
-        Console.WriteLine("\nStack Created. Press ENTER to manage your stack\n");
+        Console.WriteLine("\nStack Created. Press ENTER to populate your stack\n");
 
-        // Console.ReadLine();
+        StackManager.Populate();
     }
 
     public static void ManageStacks() {
@@ -67,7 +84,7 @@ public class userInput {
 
         switch(manageOption) {
             case "0":
-                //main menu
+                mainMenu();
             break;
             case "1":
                 StackManager.Populate();

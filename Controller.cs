@@ -61,19 +61,19 @@ public class Controller {
                             Name = reader.GetString(1)
                         }); 
                 }
+
+                return stackData;
             } else {
-                Console.WriteLine("No Stacks Exist");
+                return null;
             }
-
-            connection.Close();
-
-            return stackData;
         } 
     }
 
     public static List<Records> ReindexedStack() {
 
         List<Records> stackData = returnStack();
+
+        if (stackData != null){
 
         List<Records> ReindexedStack = new();
 
@@ -83,9 +83,11 @@ public class Controller {
                         Id = i + 1,
                         Name = stackData[i].Name
                     });
+        }        
+            return ReindexedStack;
+        } else {
+            return null;
         }
-
-        return ReindexedStack;
     }
 
     public static List<Cards> returnCards() {
@@ -110,13 +112,11 @@ public class Controller {
                             StackId = reader.GetInt32(3)
                         }); 
                 }
+
+                return cardData;
             } else {
-                Console.WriteLine("No Cards Exist");
+                return null;
             }
-
-            connection.Close();
-
-            return cardData;
         }
     }
 
